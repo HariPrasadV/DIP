@@ -31,3 +31,23 @@ colorbar;
 saveas(fig, '../images/circles.png');
 disp('subsampled images saved as `circles.png` in images/');
 toc;
+
+%%  Q1.b - bilinear interpolation
+tic;
+
+fig = figure('Visible','off');
+
+% get the interpolated image of barbara
+interpolated_img = myBilinearInterpolation();
+
+imagesc(interpolated_img);
+title('bilinearly interpolated');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+saveas(fig, '../images/barbaraInterpolated.png');
+disp('interpolated image saved as `barbaraInterpolated.png` in images/');
+
+toc;
