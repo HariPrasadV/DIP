@@ -51,3 +51,23 @@ saveas(fig, '../images/barbaraInterpolated.png');
 disp('interpolated image saved as `barbaraInterpolated.png` in images/');
 
 toc;
+
+%% Q1.c - Nearest neighbour interpolation
+tic;
+
+fig = figure('Visible','off');
+
+% get the interpolated image of barbara
+interpolated_img = myNearestNeighborInterpolation();
+
+imagesc(interpolated_img);
+title('nearest neighbour interpolated');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+saveas(fig, '../images/barbaraNNInterpolated.png');
+disp('interpolated image saved as `barbaraNNInterpolated.png` in images/');
+
+toc;
