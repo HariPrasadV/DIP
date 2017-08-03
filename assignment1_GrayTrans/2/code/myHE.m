@@ -8,6 +8,6 @@ function out = myHE(img)
         [counts, ~] = imhist(img(:,:,ii));
         probs = counts / N;
         cdf = cumsum(probs);
-        T = floor(255 * cdf);
+        T = 255 * cdf;
         out(:,:,ii) = uint8(T(img(:,:,ii) + 1));
     end

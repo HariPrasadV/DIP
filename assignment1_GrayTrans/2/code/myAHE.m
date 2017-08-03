@@ -1,45 +1,29 @@
-function myAHE()
+function out = myAHE(img, windowSize)
 
-    clear;
-    myNumOfColors = 200;
-    myColorScale = [[0:1/(myNumOfColors-1):1]' , ... 
-        [0:1/(myNumOfColors-1):1]' , [0:1/(myNumOfColors-1):1]'];
+    w = floor(windowSize / 2);
 
-    img = imread('../data/TEM.png');
-    windowSize = 100;
-    d = windowSize / 2;    % window size
-
-    [m, n] = size(img);
-    eqImg = zeros(m, n);
+    [m, n, d] = size(img);
     
-    tic;
     % eqImg = blockproc(img, [d d], @equalize);
     % eqImg = nlfilter(img, [d d], @equalize);
-    
-    h = waitbar(0,'Please wait...');
-    for ii = 1:m
-        for jj = 1:n
-            t = max(1, ii - d + 1);
-            b = min(ii + d, m);
-            l = max(1, jj - d + 1);
-            r = min(jj + d, n);
-            window = img(t:b, l:r);   
-            eqImg(ii, jj) = equalize(window, [ii - t + 1, jj - l + 1]);
+    h = waitbar(0, 'running AHE');
+    step = 0;
+    steps = d * m;
+    for kk = 1:d
+        for ii = 1:m
+            for jj = 1:n
+                t = max(1, ii - w + 1);
+                b = min(ii + w, m);
+                l = max(1, jj - w + 1);
+                r = min(jj + w, n);
+                window = img(t:b, l:r, kk);   
+                out(ii, jj, kk) = equalize(window, [ii - t + 1, jj - l + 1]);
+            end
+            step = step + 1;
+            waitbar(step / steps);
         end
-        waitbar(ii / m);
     end
     close(h);
-    toc;
-
-    figure();
-
-    imagesc(eqImg);
-    title('');
-    colormap (myColorScale);
-    % colormap jet;
-    daspect ([1 1 1]);
-    axis tight;
-    colorbar;
 
     function out = equalize(block, pos)
         [bm, bn] = size(block);
@@ -47,7 +31,6 @@ function myAHE()
         [counts, x] = imhist(block);
         probs = counts / N;
         cdf = cumsum(probs);
-        out = floor(255 * cdf(block(pos(1), pos(2)) + 1)); 
+        out = uint8(255 * cdf(block(pos(1), pos(2)) + 1)); 
     end
-
 end

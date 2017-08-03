@@ -109,7 +109,6 @@ subplot(1, 2, 1);
 imagesc(barbaraImg);
 title('original');
 colormap (myColorScale);
-% colormap jet;
 daspect ([1 1 1]);
 axis tight;
 colorbar;
@@ -181,3 +180,90 @@ colorbar;
 
 toc;
 
+%% Q2.c AHE
+
+% TEM -------------------
+tic;
+
+TEMImg = imread('../data/TEM.png');
+aheTEMImg = myAHE(TEMImg, 100);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(TEMImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(aheTEMImg);
+title('adaptive histogram equalized');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+% location = '../images/c/TEM.png';
+% saveas(gcf, location);
+% disp(strcat('saved adaptive histogram equalized `TEM.png` as `', location, '`'));
+
+% canyon ---------
+canyonImg = imread('../data/canyon.png');
+aheCanyonImg = myAHE(canyonImg, 100);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(canyonImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(aheCanyonImg);
+title('adaptive histogram equalized, w = 100');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+% location = '../images/c/canyon.png';
+% saveas(gcf, location);
+% disp(strcat('saved adaptive histogram equalized `canyon.png` as `', location, '`'));
+
+%% barbara --------------------
+barbaraImg = imread('../data/barbara.png');
+aheBarbaraImg = myAHE(barbaraImg, 100);
+
+tic;
+figure();
+
+subplot(1, 2, 1);
+imagesc(barbaraImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(1, 2, 2);
+imagesc(aheBarbaraImg);
+title('adaptive histogram equalized, w = 100');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+% location = '../images/c/barbara.png';
+% saveas(gcf, location);
+% disp(strcat('saved adaptive histogram equalized `barbara.png` as `', location, '`'));
+
+toc;
+
+
+%% 
