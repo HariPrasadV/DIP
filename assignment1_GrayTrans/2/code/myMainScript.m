@@ -266,4 +266,35 @@ colorbar;
 toc;
 
 
-%% 
+%% Q2.d - CLAHE
+
+% TEM
+tic;
+
+TEMImg = imread('../data/TEM.png');
+% claheTEMImg = myCLAHE(TEMImg, 0.05);
+claheTEMImg = myCLAHE(TEMImg, 0.1);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(TEMImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(claheTEMImg);
+title('CLAHE');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+% location = '../images/d/TEM.png';
+% saveas(gcf, location);
+% disp(strcat('saved CALHE `TEM.png` as `', location, '`'));
+
+toc;
