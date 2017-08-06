@@ -1,5 +1,4 @@
-function interpolated_img = myBilinearInterpolation()
-    img = imread('../data/barbaraSmall.png');
+function interpolated_img = myBilinearInterpolation(img)
     [m, n] = size(img);
     mq = 3 * m - 2;
     nq = 2 * n - 1;

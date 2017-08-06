@@ -1,5 +1,4 @@
-function interpolated_img = myNearestNeighborInterpolation()
-    img = imread('../data/barbaraSmall.png');
+function interpolated_img = myNearestNeighborInterpolation(img)
     [m, n] = size(img);
     mq = 3 * m - 2;
     nq = 2 * n - 1;
