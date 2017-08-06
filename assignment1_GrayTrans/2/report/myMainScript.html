@@ -1,0 +1,861 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>myMainScript</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-08-06"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">MyMainScript</a></li><li><a href="#2">Q2.a - linear contrast stretching</a></li><li><a href="#3">Q2.b - HE</a></li><li><a href="#4">Q2.c AHE</a></li><li><a href="#5">Q2.d - CLAHE</a></li></ul></div><h2>MyMainScript<a name="1"></a></h2><pre class="codeinput">myNumOfColors = 200;
+myColorScale = [[0:1/(myNumOfColors-1):1]' , <span class="keyword">...</span>
+    [0:1/(myNumOfColors-1):1]' , [0:1/(myNumOfColors-1):1]'];
+</pre><h2>Q2.a - linear contrast stretching<a name="2"></a></h2><pre class="codeinput">tic;
+disp(<span class="string">'linear contrast stretching..'</span>);
+
+<span class="comment">% barbara -----------</span>
+barbaraImg = imread(<span class="string">'../data/barbara.png'</span>);
+lcsBarbaraImg = myLinearContrastStretching(barbaraImg);
+
+figure();
+
+subplot(1, 2, 1);
+imagesc(barbaraImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+<span class="comment">% colormap jet;</span>
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(1, 2, 2);
+imagesc(lcsBarbaraImg);
+title(<span class="string">'linearly contrast stretched'</span>);
+colormap (myColorScale);
+<span class="comment">% colormap jet;</span>
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/a/barbara.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved linearly contrast stretched `barbara.png` as `'</span>, location, <span class="string">'`'</span>));
+
+<span class="comment">%</span>
+<span class="comment">% &lt;&lt;../images/a/TEM.png&gt;&gt;</span>
+<span class="comment">%</span>
+
+<span class="comment">% canyon --------</span>
+canyonImg = imread(<span class="string">'../data/canyon.png'</span>);
+lcsCanyonImg = myLinearContrastStretching(canyonImg);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(canyonImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+<span class="comment">% colormap jet;</span>
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(lcsCanyonImg);
+title(<span class="string">'linearly contrast stretched'</span>);
+colormap (myColorScale);
+<span class="comment">% colormap jet;</span>
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/a/canyon.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved linearly contrast stretched `canyon.png` as `'</span>, location, <span class="string">'`'</span>));
+
+<span class="comment">% TEM --------</span>
+TEMImg = imread(<span class="string">'../data/TEM.png'</span>);
+lcsTEMImg = myLinearContrastStretching(TEMImg);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(TEMImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+<span class="comment">% colormap jet;</span>
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(lcsTEMImg);
+title(<span class="string">'linearly contrast stretched'</span>);
+colormap (myColorScale);
+<span class="comment">% colormap jet;</span>
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/a/TEM.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved linearly contrast stretched `TEM.png` as `'</span>, location, <span class="string">'`'</span>));
+
+toc;
+</pre><pre class="codeoutput">linear contrast stretching..
+saved linearly contrast stretched `barbara.png` as `../images/a/barbara.png`
+saved linearly contrast stretched `canyon.png` as `../images/a/canyon.png`
+saved linearly contrast stretched `TEM.png` as `../images/a/TEM.png`
+Elapsed time is 4.248143 seconds.
+</pre><img vspace="5" hspace="5" src="../images/a/barbara.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="../images/a/canyon.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="../images/a/TEM.png" style="width:560px;height:420px;" alt=""> <h2>Q2.b - HE<a name="3"></a></h2><pre class="codeinput">tic;
+
+<span class="comment">% barbara -----------</span>
+barbaraImg = imread(<span class="string">'../data/barbara.png'</span>);
+heBarbaraImg = myHE(barbaraImg);
+
+figure();
+
+subplot(1, 2, 1);
+imagesc(barbaraImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(1, 2, 2);
+imagesc(heBarbaraImg);
+title(<span class="string">'histogram equalized'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/b/barbara.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved histogram equalized `barbara.png` as `'</span>, location, <span class="string">'`'</span>));
+
+<span class="comment">% canyon ---</span>
+canyonImg = imread(<span class="string">'../data/canyon.png'</span>);
+heCanyonImg = myHE(canyonImg);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(canyonImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(heCanyonImg);
+title(<span class="string">'histogram equalized'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/b/canyon.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved histogram equalized `canyon.png` as `'</span>, location, <span class="string">'`'</span>));
+
+<span class="comment">% TEM --------</span>
+TEMImg = imread(<span class="string">'../data/TEM.png'</span>);
+heTEMImg = myHE(TEMImg);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(TEMImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(heTEMImg);
+title(<span class="string">'histogram equalized'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/b/TEM.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved histogram equalized `TEM.png` as `'</span>, location, <span class="string">'`'</span>));
+
+toc;
+</pre><pre class="codeoutput">saved histogram equalized `barbara.png` as `../images/b/barbara.png`
+saved histogram equalized `canyon.png` as `../images/b/canyon.png`
+saved histogram equalized `TEM.png` as `../images/b/TEM.png`
+Elapsed time is 4.003498 seconds.
+</pre><img vspace="5" hspace="5" src="../images/b/barbara.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="../images/b/canyon.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="../images/b/TEM.png" style="width:560px;height:420px;" alt=""> <h2>Q2.c AHE<a name="4"></a></h2><pre class="codeinput"><span class="comment">% TEM AHE -------------------</span>
+tic;
+
+TEMImg = imread(<span class="string">'../data/TEM.png'</span>);
+aheTEMImg = myAHE(TEMImg, 100);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(TEMImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(aheTEMImg);
+title(<span class="string">'adaptive histogram equalized'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/c/TEM.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved adaptive histogram equalized `TEM.png` as `'</span>, location, <span class="string">'`'</span>));
+
+<span class="comment">% canyon AHE ---------</span>
+
+canyonImg = imread(<span class="string">'../data/canyon.png'</span>);
+aheCanyonImg = myAHE(canyonImg, 100);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(canyonImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(aheCanyonImg);
+title(<span class="string">'adaptive histogram equalized, w = 100'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/c/canyon.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved adaptive histogram equalized `canyon.png` as `'</span>, location, <span class="string">'`'</span>));
+
+<span class="comment">% barbara AHE --------------------</span>
+tic;
+
+barbaraImg = imread(<span class="string">'../data/barbara.png'</span>);
+aheBarbaraImg = myAHE(barbaraImg, 100);
+
+figure();
+
+subplot(1, 2, 1);
+imagesc(barbaraImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(1, 2, 2);
+imagesc(aheBarbaraImg);
+title(<span class="string">'adaptive histogram equalized, w = 100'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/d/barbara.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved adaptive histogram equalized `barbara.png` as `'</span>, location, <span class="string">'`'</span>));
+
+toc;
+</pre>
+<pre class="codeoutput">
+	saved adaptive histogram equalized `TEM.png` as `../images/c/TEM.png`
+	saved adaptive histogram equalized `canyon.png` as `../images/c/canyon.png`
+	saved adaptive histogram equalized `barbara.png` as `../images/c/barbara.png`
+	Elapsed time is 24.889249 seconds.
+</pre>
+<img vspace="5" hspace="5" src="../images/c/TEM.png" style="width:560px;height:420px;" alt=""> 
+<img vspace="5" hspace="5" src="../images/c/canyon.png" style="width:560px;height:420px;" alt=""> 
+<img vspace="5" hspace="5" src="../images/c/barbara.png" style="width:560px;height:420px;" alt="">
+
+<pre>
+	`TEM.png` AHE with window size 10, 50, 200 and 500 respectively
+</pre>
+<img vspace="5" hspace="5" src="../images/c/TEM-10.png" style="width:560px;height:420px;" alt="">
+<img vspace="5" hspace="5" src="../images/c/TEM-50.png" style="width:560px;height:420px;" alt="">
+<img vspace="5" hspace="5" src="../images/c/TEM-200.png" style="width:560px;height:420px;" alt="">
+<img vspace="5" hspace="5" src="../images/c/TEM-500.png" style="width:560px;height:420px;" alt="">  
+
+<pre>
+	---------------------------------------------------------- <br><br>
+	Objects of interest in TEM.png fits in a window of size around 100. <br>
+	From the first image, it is clear that there an excessive noise amplification in case of smaller window size.
+	And last image, which corresponds to window size of 500, shows low contrast improvement.
+</pre>
+
+<pre>
+	---------------------------------------------------------- <br><br>
+	`barbara.png` AHE with window size 10, 50 and 300 respectively
+</pre>
+<img vspace="5" hspace="5" src="../images/c/barbara-10.png" style="width:560px;height:420px;" alt="">
+<img vspace="5" hspace="5" src="../images/c/barbara-50.png" style="width:560px;height:420px;" alt="">
+<img vspace="5" hspace="5" src="../images/c/barbara-300.png" style="width:560px;height:420px;" alt="">
+
+<pre>
+	---------------------------------------------------------- <br><br>
+	`canyon.png` AHE with window size 10, 50 and 500 respectively
+</pre>
+<img vspace="5" hspace="5" src="../images/c/canyon-10.png" style="width:560px;height:420px;" alt="">
+<img vspace="5" hspace="5" src="../images/c/canyon-50.png" style="width:560px;height:420px;" alt="">
+<img vspace="5" hspace="5" src="../images/c/canyon-500.png" style="width:560px;height:420px;" alt="">
+
+<h2>Q2.d - CLAHE<a name="5"></a></h2><pre class="codeinput">tic;
+
+<span class="comment">% TEM ---------------</span>
+
+TEMImg = imread(<span class="string">'../data/TEM.png'</span>);
+claheTEMImg = myCLAHE(TEMImg, 100, 0.01);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(TEMImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(claheTEMImg);
+title(<span class="string">'CLAHE, w = 100, threshold = 0.01'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/d/TEM.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved CALHE `TEM.png` as `'</span>, location, <span class="string">'`'</span>));
+
+
+<span class="comment">% barbara -------</span>
+barbaraImg = imread(<span class="string">'../data/barbara.png'</span>);
+claheBarbaraImg = myCLAHE(barbaraImg, 100, 0.005);
+
+figure();
+
+subplot(1, 2, 1);
+imagesc(barbaraImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(1, 2, 2);
+imagesc(claheBarbaraImg);
+title(<span class="string">'CLAHE, w = 100, threshold = 0.005'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/d/barbara.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved CLAHE `barbara.png` as `'</span>, location, <span class="string">'`'</span>));
+
+<span class="comment">% canyon ---------</span>
+
+canyonImg = imread(<span class="string">'../data/canyon.png'</span>);
+claheCanyonImg = myCLAHE(canyonImg, 200, 0.05);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(canyonImg);
+title(<span class="string">'original'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(claheCanyonImg);
+title(<span class="string">'CLAHE, w = 200, threshold = 0.05'</span>);
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis <span class="string">tight</span>;
+colorbar;
+
+location = <span class="string">'../images/d/canyon.png'</span>;
+saveas(gcf, location);
+disp(strcat(<span class="string">'saved CLAHE `canyon.png` as `'</span>, location, <span class="string">'`'</span>));
+
+toc;
+</pre><pre class="codeoutput">saved CALHE `TEM.png` as `../images/d/TEM.png`
+saved CLAHE `barbara.png` as `../images/d/barbara.png`
+saved CLAHE `canyon.png` as `../images/d/canyon.png`
+Elapsed time is 166.028653 seconds.
+</pre>
+<img vspace="5" hspace="5" src="../images/d/TEM.png" style="width:560px;height:420px;" alt=""> 
+<img vspace="5" hspace="5" src="../images/d/barbara.png" style="width:560px;height:420px;" alt=""> 
+<img vspace="5" hspace="5" src="../images/d/canyon.png" style="width:560px;height:420px;" alt=""> 
+
+<pre>
+	---------------------------------------------------------- <br><br>
+	`TEM.png` CLAHE with window size = 100, threshold = 0.008, intensity probabilities
+	[blue -> before thresholding, red -> after thresholding]
+	<img vspace="5" hspace="5" src="../images/d/TEM-probs.png" style="width:560px;height:420px;" alt=""> 
+</pre>
+
+<pre>
+	---------------------------------------------------------- <br><br>
+	`TEM.png` CLAHE with window size = 100 and different thresholds
+</pre>
+<img vspace="5" hspace="5" src="../images/d/TEM-0.005.png" style="width:560px;height:420px;" alt=""> 
+<img vspace="5" hspace="5" src="../images/d/TEM-0.008.png" style="width:560px;height:420px;" alt=""> 
+
+
+<pre>
+	---------------------------------------------------------- <br><br>
+	`barbara.png` CLAHE with window size = 100 and different thresholds
+</pre>
+<img vspace="5" hspace="5" src="../images/d/barbara-0.0025.png" style="width:560px;height:420px;" alt=""> 
+<img vspace="5" hspace="5" src="../images/d/barbara-0.1.png" style="width:560px;height:420px;" alt=""> 
+
+<pre>
+	---------------------------------------------------------- <br><br>
+	`canyon.png` CLAHE with window size = 200 and different thresholds
+</pre>
+<img vspace="5" hspace="5" src="../images/d/canyon-0.025.png" style="width:560px;height:420px;" alt=""> 
+<img vspace="5" hspace="5" src="../images/d/canyon-0.1.png" style="width:560px;height:420px;" alt=""> 
+
+<p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% MyMainScript
+myNumOfColors = 200;
+myColorScale = [[0:1/(myNumOfColors-1):1]' , ... 
+    [0:1/(myNumOfColors-1):1]' , [0:1/(myNumOfColors-1):1]'];
+
+%% Q2.a - linear contrast stretching
+tic;
+disp('linear contrast stretching..');
+
+% barbara REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+barbaraImg = imread('../data/barbara.png');
+lcsBarbaraImg = myLinearContrastStretching(barbaraImg);
+
+figure();
+
+subplot(1, 2, 1);
+imagesc(barbaraImg);
+title('original');
+colormap (myColorScale);
+% colormap jet;
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(1, 2, 2);
+imagesc(lcsBarbaraImg);
+title('linearly contrast stretched');
+colormap (myColorScale);
+% colormap jet;
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/a/barbara.png';
+saveas(gcf, location);
+disp(strcat('saved linearly contrast stretched `barbara.png` as `', location, '`'));
+
+% 
+% <<../images/a/TEM.png>>
+%
+
+% canyon REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+canyonImg = imread('../data/canyon.png');
+lcsCanyonImg = myLinearContrastStretching(canyonImg);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(canyonImg);
+title('original');
+colormap (myColorScale);
+% colormap jet;
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(lcsCanyonImg);
+title('linearly contrast stretched');
+colormap (myColorScale);
+% colormap jet;
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/a/canyon.png';
+saveas(gcf, location);
+disp(strcat('saved linearly contrast stretched `canyon.png` as `', location, '`'));
+
+% TEM REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+TEMImg = imread('../data/TEM.png');
+lcsTEMImg = myLinearContrastStretching(TEMImg);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(TEMImg);
+title('original');
+colormap (myColorScale);
+% colormap jet;
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(lcsTEMImg);
+title('linearly contrast stretched');
+colormap (myColorScale);
+% colormap jet;
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/a/TEM.png';
+saveas(gcf, location);
+disp(strcat('saved linearly contrast stretched `TEM.png` as `', location, '`'));
+
+toc;
+
+
+%% Q2.b - HE
+tic;
+
+% barbara REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+barbaraImg = imread('../data/barbara.png');
+heBarbaraImg = myHE(barbaraImg);
+
+figure();
+
+subplot(1, 2, 1);
+imagesc(barbaraImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(1, 2, 2);
+imagesc(heBarbaraImg);
+title('histogram equalized');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/b/barbara.png';
+saveas(gcf, location);
+disp(strcat('saved histogram equalized `barbara.png` as `', location, '`'));
+
+% canyon REPLACE_WITH_DASH_DASH-
+canyonImg = imread('../data/canyon.png');
+heCanyonImg = myHE(canyonImg);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(canyonImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(heCanyonImg);
+title('histogram equalized');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/b/canyon.png';
+saveas(gcf, location);
+disp(strcat('saved histogram equalized `canyon.png` as `', location, '`'));
+
+% TEM REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+TEMImg = imread('../data/TEM.png');
+heTEMImg = myHE(TEMImg);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(TEMImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(heTEMImg);
+title('histogram equalized');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/b/TEM.png';
+saveas(gcf, location);
+disp(strcat('saved histogram equalized `TEM.png` as `', location, '`'));
+
+toc;
+
+%% Q2.c AHE
+
+% TEM AHE REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+tic;
+
+TEMImg = imread('../data/TEM.png');
+aheTEMImg = myAHE(TEMImg, 100);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(TEMImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(aheTEMImg);
+title('adaptive histogram equalized');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/c/TEM.png';
+saveas(gcf, location);
+disp(strcat('saved adaptive histogram equalized `TEM.png` as `', location, '`'));
+
+% canyon AHE REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+canyonImg = imread('../data/canyon.png');
+aheCanyonImg = myAHE(canyonImg, 100);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(canyonImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(aheCanyonImg);
+title('adaptive histogram equalized, w = 100');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/c/canyon.png';
+saveas(gcf, location);
+disp(strcat('saved adaptive histogram equalized `canyon.png` as `', location, '`'));
+
+% barbara AHE REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+tic;
+
+barbaraImg = imread('../data/barbara.png');
+aheBarbaraImg = myAHE(barbaraImg, 100);
+
+figure();
+
+subplot(1, 2, 1);
+imagesc(barbaraImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(1, 2, 2);
+imagesc(aheBarbaraImg);
+title('adaptive histogram equalized, w = 100');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/d/barbara.png';
+saveas(gcf, location);
+disp(strcat('saved adaptive histogram equalized `barbara.png` as `', location, '`'));
+
+toc;
+
+
+%% Q2.d - CLAHE
+tic;
+
+% TEM REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+TEMImg = imread('../data/TEM.png');
+claheTEMImg = myCLAHE(TEMImg, 100, 0.01);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(TEMImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(claheTEMImg);
+title('CLAHE, w = 100, threshold = 0.01');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/d/TEM.png';
+saveas(gcf, location);
+disp(strcat('saved CALHE `TEM.png` as `', location, '`'));
+
+
+% barbara REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+barbaraImg = imread('../data/barbara.png');
+claheBarbaraImg = myCLAHE(barbaraImg, 100, 0.005);
+
+figure();
+
+subplot(1, 2, 1);
+imagesc(barbaraImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(1, 2, 2);
+imagesc(claheBarbaraImg);
+title('CLAHE, w = 100, threshold = 0.005');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/d/barbara.png';
+saveas(gcf, location);
+disp(strcat('saved CLAHE `barbara.png` as `', location, '`'));
+
+% canyon REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+canyonImg = imread('../data/canyon.png');
+claheCanyonImg = myCLAHE(canyonImg, 200, 0.05);
+
+figure();
+
+subplot(2, 1, 1);
+imagesc(canyonImg);
+title('original');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+subplot(2, 1, 2);
+imagesc(claheCanyonImg);
+title('CLAHE, w = 200, threshold = 0.05');
+colormap (myColorScale);
+daspect ([1 1 1]);
+axis tight;
+colorbar;
+
+location = '../images/d/canyon.png';
+saveas(gcf, location);
+disp(strcat('saved CLAHE `canyon.png` as `', location, '`'));
+
+toc;
+##### SOURCE END #####
+--></body></html>
