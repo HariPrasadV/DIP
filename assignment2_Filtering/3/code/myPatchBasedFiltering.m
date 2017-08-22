@@ -11,11 +11,26 @@ function out = myPatchBasedFiltering()
     % downsample by 2 
     img = img(1:2:end, 1:2:end);
     [m, n] = size(img);
+    figure;
+    subplot(1,3,1);
+    imagesc(img);
+    colormap (myColorScale); 
+    daspect ([1 1 1]);  
+    axis tight;
+    colorbar
     
-    % corrupt image
     max_intensity = max(max(img));
     img = img / max_intensity;
+    imgOrig = img;
+    
+    % corrupt image
     img = img + (0.05 * randn(m, n));
+    subplot(1,3,2);
+    imagesc(img);
+    colormap (myColorScale); 
+    daspect ([1 1 1]);  
+    axis tight;
+    colorbar
     
     filtered_image = zeros(m, n);
     
@@ -25,7 +40,7 @@ function out = myPatchBasedFiltering()
     p = floor(patchSize / 2);
     
     img = padarray(img, [p, p]);
-    sigma_sq = 2;
+    sigma_sq = 0.2;
     
     h = waitbar(0, 'running patch based filtering..');
     step = 0;
@@ -60,6 +75,9 @@ function out = myPatchBasedFiltering()
     end
     close(h);
     
+    rmsd = sqrt(sum(sum((imgOrig-filtered_image).^2)) / (m*n))
+    
+    subplot(1,3,3);
     imagesc(filtered_image);
     colormap (myColorScale);
     daspect ([1 1 1]);

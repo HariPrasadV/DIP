@@ -4,7 +4,7 @@ function myUnsharpMasking(imgPath, sigma, fact)
     figure;
     subplot(1,2,1);
     imshow(imgOrig);
-    colorbar 
+    colorbar
 
     imgGauss = imgaussfilt(imgOrig, sigma);
     imgDiff = imgOrig - imgGauss;
@@ -12,4 +12,4 @@ function myUnsharpMasking(imgPath, sigma, fact)
 
     subplot(1,2,2);
     imshow(imgSharper);
-    colorbar 
+    colorbar
