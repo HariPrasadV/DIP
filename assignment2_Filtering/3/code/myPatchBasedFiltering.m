@@ -1,19 +1,19 @@
-function out = myPatchBasedFiltering()
+function out = myPatchBasedFiltering(imgPath, sigma)
 
     myNumOfColors = 200;
     myColorScale = [ [0:1/(myNumOfColors - 1):1]' , ... 
         [0:1/(myNumOfColors - 1):1]' , [0:1/(myNumOfColors - 1):1]' ]; 
     
     %%
-    img = load('../data/barbara.mat');
+    img = load(imgPath);
     img = img.imageOrig;
     
     % downsample by 2 
     img = img(1:2:end, 1:2:end);
     [m, n] = size(img);
     figure;
-    subplot(1,3,1);
     imagesc(img);
+    title("Original");
     colormap (myColorScale); 
     daspect ([1 1 1]);  
     axis tight;
@@ -25,8 +25,9 @@ function out = myPatchBasedFiltering()
     
     % corrupt image
     img = img + (0.05 * randn(m, n));
-    subplot(1,3,2);
+    figure;
     imagesc(img);
+    title("Corrupted");
     colormap (myColorScale); 
     daspect ([1 1 1]);  
     axis tight;
@@ -40,7 +41,7 @@ function out = myPatchBasedFiltering()
     p = floor(patchSize / 2);
     
     img = padarray(img, [p, p]);
-    sigma_sq = 0.2;
+    sigma_sq = sigma*sigma;
     
     h = waitbar(0, 'running patch based filtering..');
     step = 0;
@@ -77,8 +78,9 @@ function out = myPatchBasedFiltering()
     
     rmsd = sqrt(sum(sum((imgOrig-filtered_image).^2)) / (m*n))
     
-    subplot(1,3,3);
+    figure;
     imagesc(filtered_image);
+    title("Filtered, sigma = "+string(sigma));
     colormap (myColorScale);
     daspect ([1 1 1]);
     axis tight;
