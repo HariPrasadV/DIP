@@ -13,7 +13,7 @@ function out = myPatchBasedFiltering(imgPath, sigma)
     [m, n] = size(img);
     figure;
     imagesc(img);
-    title("Original");
+    title('Original');
     colormap (myColorScale); 
     daspect ([1 1 1]);  
     axis tight;
@@ -27,7 +27,7 @@ function out = myPatchBasedFiltering(imgPath, sigma)
     img = img + (0.05 * randn(m, n));
     figure;
     imagesc(img);
-    title("Corrupted");
+    title('Corrupted');
     colormap (myColorScale); 
     daspect ([1 1 1]);  
     axis tight;
@@ -80,7 +80,7 @@ function out = myPatchBasedFiltering(imgPath, sigma)
     
     figure;
     imagesc(filtered_image);
-    title("Filtered, sigma = "+string(sigma));
+    title('Filtered');
     colormap (myColorScale);
     daspect ([1 1 1]);
     axis tight;
