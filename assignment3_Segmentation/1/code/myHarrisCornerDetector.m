@@ -8,7 +8,7 @@ I = I.imageOrig;
 I = mat2gray(I);
 
 [Ix, Iy] = imgradientxy(I); 
-[Imag, Idir] = imgradient(Ix, Iy);
+% [Imag, Idir] = imgradient(Ix, Iy);
 
 Ix2 = Ix .* Ix;
 Iy2 = Iy .* Iy;
@@ -42,7 +42,9 @@ for ii = 1:m
 end
 
 
-cornerMeasure = mat2gray((R > 10) * 250);
+cornerMeasure = mat2gray(R > 15);
+cornerMeasure = nonMaxSuppression(cornerMeasure);
+
 superposed = mat2gray(cornerMeasure + I);
 
 % figure();
