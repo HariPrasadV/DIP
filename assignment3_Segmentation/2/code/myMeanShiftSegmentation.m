@@ -48,7 +48,7 @@ function [] = myMeanShiftSegmentation(sigma_S, sigma_I, noOfNeighbours, max_iter
     ii = 0;
     while (ii < max_iter)
 
-        disp(strcat(['iteration : ', num2str(ii + 1)]));
+        % disp(strcat(['iteration : ', num2str(ii + 1)]));
 
         % do a KNN search
         % Idx(i, :) -> indices of nearest neighbours of point i
@@ -96,25 +96,34 @@ function [] = myMeanShiftSegmentation(sigma_S, sigma_I, noOfNeighbours, max_iter
                     ', nNeighs=', num2str(noOfNeighbours), ...
                     ', nIters=', num2str(max_iter)]);
 
-    figure();
+    
+    iptsetpref('ImshowAxesVisible','on');
+	figure('units','normalized','outerposition',[0 0 1 1])
     suptitle(fig_title);
 
     subplot(1, 2, 1);
-    imshow(I), colorbar;
-    title('original');
+    I = mat2gray(imread('../data/baboonColor.png'));
+    imagesc(I);
+    daspect ([1 1 1]);
+    axis tight;
+    colorbar;
+    title('original image');
 
     subplot(1, 2, 2);
-    imshow(O), colorbar;
-    title('segmented');
+    imagesc(O);
+    daspect ([1 1 1]);
+    axis tight;
+    colorbar;
+    title('segmented image');
 
     set(findall(gcf,'-property','FontSize'),'FontSize',20)
 
     % save image as `seg_<sigma_S>_<sigma_I>_<noOfNeighbours>_<max_iter>.png`
-    file_name = strcat(['../images/seg_', num2str(sigma_S), '_', ...
-                                num2str(sigma_I), '_'], ...
-                                num2str(noOfNeighbours), '_', ...
-                                num2str(max_iter), '.png');
-    saveas(gcf, file_name);
+    % file_name = strcat(['../images/seg_', num2str(sigma_S), '_', ...
+    %                             num2str(sigma_I), '_'], ...
+    %                             num2str(noOfNeighbours), '_', ...
+    %                             num2str(max_iter), '.png');
+    % saveas(gcf, file_name);
     disp('done');
 end
 
