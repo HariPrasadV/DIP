@@ -1,5 +1,11 @@
 function [] = myMeanShiftSegmentation(sigma_S, sigma_I, noOfNeighbours, max_iter)
 
+    % % sample paramter values
+    % sigma_S = 16;
+    % sigma_I = 48;
+    % noOfNeighbours = 100; 
+    % max_iter = 10;
+
     I = imread('../data/baboonColor.png');
 
     % normalize intensity values to [0, 1]
@@ -49,25 +55,24 @@ function [] = myMeanShiftSegmentation(sigma_S, sigma_I, noOfNeighbours, max_iter
         % D(i, :) -> distance of nearest neighbours of point i
         % both `Idx` and `D` are of size (N x noOfNeighbours)
         [Idx, D] = knnsearch(X, X, 'k', noOfNeighbours);
-
-        % for each point, calculate neighbour weights
-        for jj = 1:N
-
-            % gaussian weights (sigma was applied earlier)
-            % weights -> (noOfNeighbours x 1)
-            weights = exp(-(D(jj, :) .^ 2))';
-
-            % get sum of weights (denominator)
-            weights_sum = sum(weights);
-
-            weights_3 = [weights, weights, weights];
-            X(jj, 3:5) = sum(weights_3 .* X(Idx(jj, :), 3:5)) / weights_sum;
-
-        end
+        
+        % gaussian weights (sigma was applied earlier)
+        % weights -> (N x noOfNeighbours)
+        weights = exp(-(D .^ 2));
+        
+        % get sum of weights (denominator)
+        weights_sum = sum(weights, 2);
+        
+        weights = cat(3, weights, weights, weights);
+        weights_sum = cat(3, weights_sum, weights_sum, weights_sum);
+        
+        a = reshape(X(Idx, 3:5), [N, noOfNeighbours, 3]); 
+        X(:, 3:5) = sum(a .* weights, 2) ./ weights_sum;
 
         ii = ii + 1;
     end
 
+    
     disp('saving ouput image..')
 
     % initialize output image to zeros
