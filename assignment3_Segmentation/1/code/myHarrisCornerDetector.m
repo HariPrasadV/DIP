@@ -29,11 +29,11 @@ function out = myHarrisCornerDetector(sigma_w, sigma_der, k, threshold, showImag
     Sy2 = conv2(Iy2, gaussf, 'same');
     Sxy = conv2(Ixy, gaussf, 'same');
 
-    % sum of prod of derivatives
-    sumf = ones(3, 3);
-    Sx2 = conv2(Sx2, sumf, 'same');
-    Sy2 = conv2(Sy2, sumf, 'same');
-    Sxy = conv2(Sxy, sumf, 'same');
+    % % sum of prod of derivatives
+    % sumf = ones(3, 3);
+    % Sx2 = conv2(Sx2, sumf, 'same');
+    % Sy2 = conv2(Sy2, sumf, 'same');
+    % Sxy = conv2(Sxy, sumf, 'same');
 
     % stores eigenvalues of the structure tensor, evaluated at each pixel.
     E1 = zeros(m, n); 
