@@ -13,10 +13,11 @@ toc;
 %%
 tic;
 
-sigma_w = 1;
+% a good set of parameters
+sigma_w = 0.5;
 sigma_der = 0.5;
-k = 0.04;
-threshold = 2;
+k = 0.06;
+threshold = 0.02;
 I = myHarrisCornerDetector(sigma_w, sigma_der, k, threshold, 0);
 fig_title = strcat(['sigma_w=', num2str(sigma_w), ...
                     ', sigma_{Ix, Iy}=', num2str(sigma_der), ... 
