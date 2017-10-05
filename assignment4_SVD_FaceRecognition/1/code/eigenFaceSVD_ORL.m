@@ -44,7 +44,10 @@ for ii = 1:Ncols
 end
 
 
-[U, ~, ~] = svd(X);
+[U, S, ~] = svd(X);
+vals = diag(S);
+[~, indices] = sort(vals, 'descend');
+U = U(:, indices);
 V = normc(U);
 
 %%
