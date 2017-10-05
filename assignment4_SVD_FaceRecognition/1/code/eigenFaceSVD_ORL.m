@@ -44,14 +44,8 @@ for ii = 1:Ncols
 end
 
 
-L = X' * X;
-[W, D] = eig(L);
-vals = diag(D);
-[~, indices] = sort(vals, 'descend');
-W = W(:, indices);
-
-V = X * W;
-V = normc(V);
+[U, ~, ~] = svd(X);
+V = normc(U);
 
 %%
 k_vals = [1, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100, 150, 170];
