@@ -50,12 +50,14 @@ vals = diag(D);
 W = W(:, indices);
 
 V = X * W;
+V = normc(V);
 
 %%
 k_vals = [1, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100, 150, 170];
 nk = size(k_vals, 2);
+recog_rate = zeros(1, nk);
 
-for ii = 1:1
+for ii = 1:nk
     k = k_vals(ii);
     Vk_t = V(:, 1:k)';
     
@@ -64,16 +66,23 @@ for ii = 1:1
         alpha = [alpha, Vk_t * X(:, jj)];
     end
     
+    correct = 0;
     Nycols = Ndirs * Ntest;
     for jj = 1:Nycols
         z = Y(:, jj);
         z = z - mean_face;
         b = Vk_t * z;
         
-        IDX = knnsearch(alpha', [b]);
-        disp(Ylabel(jj) - Xlabel(IDX));
+        IDX = knnsearch(alpha', [b]');
+        correct = correct + (Ylabel(jj) == Xlabel(IDX));
     end
+    recog_rate(ii) = (correct / Nycols);
 end
+
+plot(k_vals, recog_rate, '-o');
+title('Variation of rate of recognition with k');
+xlabel('k');
+ylabel('Rate of recognition');
 
 
 
