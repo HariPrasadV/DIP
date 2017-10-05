@@ -1,11 +1,13 @@
-
+%%
 data_root = '../../data/att_faces/';
 dir_list = dir(strcat(data_root, 's*'));
 
 m = 112;
 n = 92;
 X = zeros(m * n, 0);
+Xlabel = zeros(0, 0);
 Y = zeros(m * n, 0);
+Ylabel = zeros(0, 0);
 
 % number of subdirs
 Ndirs = 32;
@@ -21,12 +23,14 @@ for ii = 1:Ndirs
         I = imread(strcat(subdir, img_list(jj).name));
         I = mat2gray(I);
         X = [X, I(:)];
+        Xlabel = [Xlabel, ii];
     end
     
     for jj = Ntrain+1:Ntrain+Ntest
         I = imread(strcat(subdir, img_list(jj).name));
         I = mat2gray(I);
         Y = [Y, I(:)];
+        Ylabel = [Ylabel, ii];
     end
 end
 
@@ -46,5 +50,36 @@ vals = diag(D);
 W = W(:, indices);
 
 V = X * W;
+
+%%
+k_vals = [1, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100, 150, 170];
+nk = size(k_vals, 2);
+
+for ii = 1:1
+    k = k_vals(ii);
+    Vk_t = V(:, 1:k)';
+    
+    alpha = zeros(k, 0);
+    for jj = 1:Ncols
+        alpha = [alpha, Vk_t * X(:, jj)];
+    end
+    
+    Nycols = Ndirs * Ntest;
+    for jj = 1:Nycols
+        z = Y(:, jj);
+        z = z - mean_face;
+        b = Vk_t * z;
+        
+        IDX = knnsearch(alpha', [b]);
+        disp(Ylabel(jj) - Xlabel(IDX));
+    end
+end
+
+
+
+
+
+
+
 
 
