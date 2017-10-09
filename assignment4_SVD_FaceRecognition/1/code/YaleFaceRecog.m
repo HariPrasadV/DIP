@@ -41,10 +41,10 @@ y = zeros(size(kVec));
 ll = 1;
 for kk = kVec
     [U,S,V1] = svds(X,kk);
-     topK = zeros(d,kk);
-     for i = 1:kk
-         topK(:,i) = U(:,i)./norm(U(:,i));
-     end
+    topK = zeros(d,kk);
+    for i = 1:kk
+        topK(:,i) = U(:,i)./norm(U(:,i));
+    end
     m = 255.0/max(max(topK));
     topK = topK.*m;
     
@@ -63,13 +63,18 @@ for kk = kVec
             
             Coeff = (topK')*inpImg;
             SqDiff = zeros(1,N);
-            for i = 1:N
-                SqDiff(1,i) = norm(Alp(:,i) - Coeff);
-            end
-            [Q,I1] = sort(SqDiff);
-            %Q(1)
+            
             if (excludeTop3 == 1 && kk >= 4)
-                I1(1) = I1(4);
+                for i = 1:N
+                    SqDiff(1,i) = norm(Alp(4:kk,i) - Coeff(4:kk));
+                end
+                [Q,I1] = sort(SqDiff);
+            else
+                for i = 1:N
+                    SqDiff(1,i) = norm(Alp(:,i) - Coeff);
+                end
+                [Q,I1] = sort(SqDiff);
+                %Q(1)
             end
             %trainLabels(I1(1))
             if(trainLabels(I1(1)) == filepath)
