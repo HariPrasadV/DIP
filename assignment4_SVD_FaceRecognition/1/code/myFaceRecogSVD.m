@@ -1,4 +1,4 @@
-function myFaceRecog(kVec)
+function myFaceRecogSVD(kVec)
 d = 112*92;
 n1 = 32;
 n2 = 6;
@@ -19,23 +19,29 @@ end
 for i = 1:N
     X(:,i) = X(:,i) - mean;
 end
-L = (X')*X;
-[W,D] = eig(L);
-V = X*W;
-A = diag(D);
-[~,I] = sort(A,'descend');
-Vreq = zeros(d,N-1);
-for i = 1:N-1
-    Vreq(:,i) = V(:,I(i))./norm(V(:,I(i)));
-end
-m = 255.0/max(max(Vreq));
-Vreq = Vreq.*m;
+% [~,S,V1] = svds(X);
+% V = X*V1;
+% A = diag(S);
+% [~,I] = sort(A,'descend');
+% Vreq = zeros(d,N-1);
+% for i = 1:N-1
+%     Vreq(:,i) = V(:,I(i))./norm(V(:,I(i)));
+% end
+% m = 255.0/max(max(Vreq));
+% Vreq = Vreq.*m;
 %imshow(reshape(uint8(Vreq(:,4)),[112,92]));
 
 y = zeros(size(kVec));
 ll = 1;
 for kk = kVec
-    topK = Vreq(:,1:kk);
+    [U,S,V1] = svds(X,kk);
+     topK = zeros(d,kk);
+     for i = 1:kk
+         topK(:,i) = U(:,i)./norm(U(:,i));
+     end
+    m = 255.0/max(max(topK));
+    topK = topK.*m;
+    
     Alp = (topK')*X;
     correct = 0;
     for pp = 1:32
@@ -64,4 +70,4 @@ plot(kVec,y,'-o');
 title('Variation of rate of recognition with k');
 xlabel('k');
 ylabel('Rate of recognition');
-%end
+end
