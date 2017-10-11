@@ -21,7 +21,8 @@ Xlabel = zeros(1, Nxcols);
 Y = zeros(m * n, Nycols);
 Ylabel = zeros(1, Nycols);
 
-index = 1;
+index_x = 1;
+index_y = 1;
 for ii = 1:Ndirs
     subdir = strcat(data_root, dir_list(ii).name, '/');
     img_list = dir(strcat(subdir, '*.pgm'));
@@ -29,24 +30,42 @@ for ii = 1:Ndirs
     for jj = 1:Ntrain
         I = imread(strcat(subdir, img_list(jj).name));
         I = mat2gray(I);
-        X(:, index) = I(:);
-        Xlabel(index) = ii;
+        X(:, index_x) = I(:);
+        Xlabel(index_x) = ii;
+        index_x = index_x + 1;
     end
     
     for jj = Ntrain+1:Ntrain+Ntest
         I = imread(strcat(subdir, img_list(jj).name));
         I = mat2gray(I);
-        Y(:, index) = I(:);
-        Ylabel(index) = ii;
+        Y(:, index_y) = I(:);
+        Ylabel(index_y) = ii;
+        index_y = index_y + 1;
     end
 end
 
-%%
 mean_face = mean(X, 2);
 
 for ii = 1:Nxcols
     X(:, ii) = X(:, ii) - mean_face;
 end
+
+%%
+
+% L = X' * X;
+% [W, D] = eig(L);
+% vals = diag(D);
+% [~, indices] = sort(vals, 'descend');
+% W = W(:, indices);
+% 
+% V = X * W;
+% V = normc(V);
+
+%%
+
+k_vals = [1, 2, 3, 5, 10, 15, 20, 30, 50, 60, 65, 75, 100, 200, 300, 500, 1000];
+nk = size(k_vals, 2);
+recog_rate = zeros(1, nk);
 
 L = X' * X;
 [W, D] = eig(L);
@@ -57,14 +76,17 @@ W = W(:, indices);
 V = X * W;
 V = normc(V);
 
-%%
+disp('starting..')
 
-k_vals = [1, 2, 3, 5, 10, 15, 20, 30, 50, 60, 65, 75, 100, 200, 300, 500, 1000];
-nk = size(k_vals, 2);
-recog_rate = zeros(1, nk);
-
-for ii = 1:nk
+for ii = 1:nk   
     k = k_vals(ii);
+    
+%     [U, S, ~] = svds(X, k+3);
+%     vals = diag(S);
+%     [~, indices] = sort(vals, 'descend');
+%     U = U(:, indices);
+%     V = normc(U);
+    
     Vk_t = V(:, 4:k+3)';
         
     alpha = zeros(k, Nxcols);
