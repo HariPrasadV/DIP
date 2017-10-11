@@ -76,7 +76,7 @@ function reconstruction(kVec)
     test_image = imread(strcat(data_root, 'yaleB01/yaleB01_P00A+000E+00.pgm'));
     test_image = mat2gray(test_image);
 
-    showImg(test_image, 'original image');
+    % showImg(test_image, 'original image');
 
     test_index = 1;
 
@@ -91,8 +91,17 @@ function reconstruction(kVec)
 
         % reconstruct image using eigen-coefficients
         recImg = mean_face + Vk * alpha;
-
-        showImg(mat2gray(reshape(recImg, [m, n])), ... 
-            strcat('reconstructed using top k=', num2str(kk), ' eigenfaces'));
+        
+        figure('units','normalized','outerposition',[0 0 1 1])
+       
+        subplot(1, 2, 1);
+        imshow(test_image);
+        title('original image');
+        
+        subplot(1, 2, 2);
+        imshow(mat2gray(reshape(recImg, [m, n])));
+        title(strcat('reconstructed using top k=', num2str(kk), ' eigenfaces'));
+        
+        set(findall(gcf,'-property','FontSize'),'FontSize',20)
     end
 end
