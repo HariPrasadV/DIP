@@ -1,17 +1,17 @@
-function myFaceRecogSVD_ORL(k_vals)
+function myFaceRecogYale(k_vals, excludeTop3)
 
-    data_root = '../../data/att_faces/';
-    dir_list = dir(strcat(data_root, 's*'));
+    data_root = '../../data/CroppedYale/';
+    dir_list = dir(strcat(data_root, 'yale*'));
 
-    m = 112;
-    n = 92;
+    m = 192;
+    n = 168;
 
     % number of subdirs
-    Ndirs = 32;
+    Ndirs = 38;
     % number of training images in each subdir 
-    Ntrain = 6;
+    Ntrain = 40;
     % number of testing images in each subdir
-    Ntest = 4;
+    Ntest = 20;
 
     Nxcols = Ndirs * Ntrain;
     Nycols = Ndirs * Ntest;
@@ -26,6 +26,7 @@ function myFaceRecogSVD_ORL(k_vals)
     for ii = 1:Ndirs
         subdir = strcat(data_root, dir_list(ii).name, '/');
         img_list = dir(strcat(subdir, '*.pgm'));
+
         for jj = 1:Ntrain
             I = imread(strcat(subdir, img_list(jj).name));
             I = mat2gray(I);
@@ -45,24 +46,47 @@ function myFaceRecogSVD_ORL(k_vals)
 
     mean_face = mean(X, 2);
 
-    % Xi = Xi - mean
     for ii = 1:Nxcols
         X(:, ii) = X(:, ii) - mean_face;
     end
 
-    [U, S, ~] = svd(X);
-    vals = diag(S);
-    [~, indices] = sort(vals, 'descend');
-    U = U(:, indices);
-    V = normc(U);
+    %%
 
+    L = X' * X;
+    [W, D] = eig(L);
+    vals = diag(D);
+    [~, indices] = sort(vals, 'descend');
+    W = W(:, indices);
+    
+    V = X * W;
+    V = normc(V);
+
+    %%
+
+    % k_vals = [1, 2, 3, 5, 10, 15, 20, 30, 50, 60, 65, 75, 100, 200, 300, 500, 1000];
+    
     nk = size(k_vals, 2);
     recog_rate = zeros(1, nk);
 
-    for ii = 1:nk
-        k = k_vals(ii);
-        Vk_t = V(:, 1:k)';
+    disp('starting..')
 
+    for ii = 1:nk   
+        k = k_vals(ii);
+        
+        disp(strcat('running for k = ', num2str(k)));
+
+    %     [U, S, ~] = svds(X, k+3);
+    %     vals = diag(S);
+    %     [~, indices] = sort(vals, 'descend');
+    %     U = U(:, indices);
+    %     V = normc(U);
+    
+        if (excludeTop3 == 1)
+            Vk_t = V(:, 4:k+3)';
+        else
+            Vk_t = V(:, 1:k)';
+        end
+        
         alpha = zeros(k, Nxcols);
         for jj = 1:Nxcols
             alpha(:, jj) = Vk_t * X(:, jj);
@@ -80,15 +104,14 @@ function myFaceRecogSVD_ORL(k_vals)
         recog_rate(ii) = (correct / Nycols);
     end
     
-    figure('units','normalized','outerposition',[0 0 1 1])
+    figure('units','normalized','outerposition',[0 0 1 1]);
     plot(k_vals, recog_rate, '-o');
-    title('Variation of rate of recognition with k (ORL)');
+    if (excludeTop3 == 1)
+        title('(Yale) Variation of rate of recognition with k (excluding top 3 eigenfaces)');
+    else
+        title('(Yale) Variation of rate of recognition with k ');
+    end
     xlabel('k');
     ylabel('Rate of recognition');
+    
 end
-
-
-
-
-
-

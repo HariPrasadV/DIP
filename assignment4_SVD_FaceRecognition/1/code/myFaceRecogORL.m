@@ -83,8 +83,9 @@ function myFaceRecogORL(k_vals)
         recog_rate(ii) = (correct / Nycols);
     end
 
+    figure('units','normalized','outerposition',[0 0 1 1])
     plot(k_vals, recog_rate, '-o');
-    title('Variation of rate of recognition with k');
+    title('Variation of rate of recognition with k (ORL)');
     xlabel('k');
     ylabel('Rate of recognition');
 end
