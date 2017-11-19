@@ -1,6 +1,7 @@
 %% MyMainScript
 
+%% reconstruction
 tic;
-%% Your code here
-
+kVec = [2, 10, 20, 50, 75, 100, 125, 150, 175];
+reconstruction(kVec);
 toc;
